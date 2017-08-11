@@ -56,4 +56,4 @@
     register: webpage
 
   - fail: msg='Hello World Page is not loading'
-    when: "'Hello Weorld' not in webpage.content"
+    when: "'Hello World' not in webpage.content"
