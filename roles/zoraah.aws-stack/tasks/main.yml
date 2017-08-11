@@ -10,7 +10,6 @@
 - name: Include all .yml files
   include_vars:
     dir: 'vars'
-    extensions: ['yml']
     
 - name: launch multi AZ VPC with public and private subnets via cloudformation
   cloudformation:
