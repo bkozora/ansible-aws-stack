@@ -1,4 +1,4 @@
-# AWS Provisioned nginx Web Stack Using Ansible and CloudFormation
+# DevOps Code Challenge - AWS VPC Stack Configured Using Ansible and CloudFormation 
 
 The following Ansible playbook will deploy a self contained environment to run a simple nginx web server running on AWS. A brief rundown of some of the nuts and bolts:
 
