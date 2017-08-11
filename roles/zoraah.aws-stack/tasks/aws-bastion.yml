@@ -1,0 +1,24 @@
+---
+
+##
+# AWS Bastion Host Creation via CloudFormation
+##
+
+- name: Launch Bastion CloudFormation Stack
+  cloudformation:
+    stack_name: "{{ bastion_stack_name }}"
+    state: "present"
+    region: "{{ region }}"
+    disable_rollback: false
+    template: "roles/zoraah.aws-stack/files/vpc-bastion.template"
+    template_parameters:
+      ParentVPCStack: "{{ vpc }}"
+      InstanceType: "{{ bastion_instance_type }}"
+      KeyName: "{{ bastion_key_name }}"
+      IAMUserSSHAccess: "{{ bastion_iam_ssh }}"
+      LogsRetentionInDays: "{{ bastion_log_retention }}"
+      NewRelicLicenseKey: "{{ bastion_nr_key }}"
+
+    tags:
+      name: "simple-web-bastion"
+  register: vpc_bastion

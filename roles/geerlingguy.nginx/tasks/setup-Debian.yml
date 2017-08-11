@@ -1,0 +1,17 @@
+---
+
+- name: Wait for automatic system updates
+  become: yes
+  shell: while sudo fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 1; done;
+
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=86400
+  changed_when: false
+  become: true
+
+- name: Ensure nginx is installed.
+  apt:
+    name: "{{ nginx_package_name }}"
+    state: installed
+    default_release: "{{ nginx_default_release }}"
+  become: true

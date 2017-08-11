@@ -1,0 +1,35 @@
+---
+
+##
+# Create an ELB with connection draining, increased idle timeout and cross availability zone load balancing
+##
+
+- name: Create an ELB with connection draining, increased idle timeout and cross availability zone load balancing
+  local_action:
+    module: ec2_elb_lb
+    name: "simple-web-ELB"
+    state: present
+    connection_draining_timeout: 60
+    idle_timeout: 300
+    cross_az_load_balancing: "yes"
+    region: "{{  region  }}"
+    # Note: Ansible AWS ELB can't have Subnets and Zones defined at the same time.
+    zones:
+     - "{{ vpc_az_a }}"
+     - "{{ vpc_az_b }}"
+    listeners:
+      - protocol: http
+        load_balancer_port: 80
+        instance_port: 80
+        # Need to deal with SSL cert assignment before uncommenting this section
+      # - protocol: https
+      #   load_balancer_port: 443
+      #   instance_port: 80
+    # Note: Ansible AWS ELB can't have Subnets and Zones defined at the same time.
+    #subnets:
+    #  - " {{ vpc_subnet_a_public }}"
+  register: load_balancer
+
+- name: debug load_balancer variable
+  debug:
+    msg: load_balancer

@@ -1,0 +1,9 @@
+---
+
+# Basic server certificate upload
+- iam_cert:
+    name: very_ssl
+    state: present
+    cert: roles/zoraah.cloudformation/files/ssl/simple-web-project.crt
+    key: roles/zoraah.cloudformation/files/ssl/simple-web-project.pub
+    cert_chain: roles/zoraah.cloudformation/files/ssl/simple-web-project.crt

@@ -1,0 +1,53 @@
+---
+# roles/launch/tasks/main.yml
+
+##
+# Launch our ec2 instance in the CloudFormation VPC stack we've previously created. Most of these variables are
+# a reformatted representation of the naming convention returned by the Amazon API that we redefined in
+# zoraah.aws-stack/vars/main.yml. In other words, their values are dynamically set at creation time and returned
+# to us, we don't ever manually enter in any IDs of AWS resources.
+##
+
+- name: Start the EC2 instance
+  ec2:
+    region: "{{ region }}"
+    keypair: "{{ keypair }}"
+    zone: "{{ vpc_az_a }}"
+    group: "{{ vpc_sg_name }}"
+    image: "{{ ami_id }}"
+    instance_type: "{{ instance_type }}"
+    instance_tags:
+      Name: "{{ instance_name }}"
+    volumes: "{{ volumes }}"
+    wait: yes
+    vpc_subnet_id: "{{ vpc_subnet_a_public }}"
+  register: ec2
+
+- name: Gather hosts matching tags. This is important.
+  ec2_remote_facts:
+    filters:
+      instance-state-name: running
+      instance-id: "{{ item.id }}"
+    region: "{{ region }}"
+  with_items: "{{ ec2.instances }}"
+  register: current_instance
+
+- name: debug current_instance
+  debug:
+    msg: "{{ current_instance }}"
+
+- name: Add EC2 Hosts
+  add_host:
+    name: "{{ item.public_dns_name }}"
+    groups: "{{ vpc_sg_name }}"
+    ec2_id: "{{ item.id }}"
+  with_items: "{{  ec2.instances  }}"
+
+- name: Wait for instance to boot
+  wait_for:
+    host: "{{ item.public_dns_name }}"
+    port: 22
+    delay: 30
+    timeout: 300
+    state: started
+  with_items: "{{  ec2.instances  }}"

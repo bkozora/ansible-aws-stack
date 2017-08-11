@@ -1,0 +1,39 @@
+---
+
+##
+# Initalizes AWS Security groups that only allow worldwide TCP traffic on ports 80 and 443 and
+# SSH access restricted to the user's reported IP address.
+##
+
+- name: Get user's IP address
+  action: uri url=http://ifconfig.me/ip return_content=yes
+  register: user_ip
+  
+- name: debug ip
+  debug:
+    msg: "***** WILL RESTRICT SSH COMMUNICATIONS TO IP ADDRESS {{ user_ip.content | ipaddr }} ******"
+
+- name: AWS Security Group for simple web server project
+  ec2_group:
+    name: "{{  vpc_sg_name  }}"
+    description: the security group for the HTTP traffic to the web example project
+    vpc_id: "{{  vpc  }}"
+    region: "{{  region  }}"
+    rules:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        # could be "{{ vpc_sg_name }}" once we get more advanced with routing
+        cidr_ip: 0.0.0.0/0
+      # For now we don't have SSL support
+      # - proto: tcp
+      #   from_port: 443
+      #   to_port: 443
+      #   cidr_ip: 0.0.0.0/0
+      # Only allow SSH from the User's IP address that we retrieved from earlier,
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        # the containing group name may be specified here
+        cidr_ip: "{{ user_ip.content | ipaddr }}/32"
+    state: present

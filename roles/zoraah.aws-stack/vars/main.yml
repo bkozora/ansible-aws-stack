@@ -1,0 +1,38 @@
+---
+
+# vars file for zoraah.aws-stack
+#
+# This information was returned from our CloudFormation stack creation call. We're
+# reformatting the variable names to better match the rest of our naming conventions
+
+
+##
+# All encompassing VPC info
+##
+
+vpc_az_a: "{{ cf.stack_outputs.AZA }}"
+vpc_az_b: "{{ cf.stack_outputs.AZB }}"
+vpc_azs: "{{ cf.stack_outputs.AZs }}"
+vpc_class_b_cidr: "{{ cf.stack_outputs.ClassB }}"
+vpc_route_table_a_private: "{{ cf.stack_outputs.RouteTableAPrivate }}"
+vpc_route_table_a_public: "{{ cf.stack_outputs.RouteTableAPublic }}"
+vpc_route_table_b_private: "{{ cf.stack_outputs.RouteTableBPrivate }}"
+vpc_route_table_b_public: "{{ cf.stack_outputs.RouteTableBPublic }}"
+vpc_route_table_private: "{{ cf.stack_outputs.RouteTablePrivate }}"
+vpc_route_table_public: "{{ cf.stack_outputs.RouteTablePublic }}"
+vpc_route_tables_private: "{{ cf.stack_outputs.RouteTablesPrivate }}"
+vpc_route_tables_public: "{{ cf.stack_outputs.RouteTablesPublic }}"
+vpc_subnet_a_private: "{{ cf.stack_outputs.SubnetAPrivate }}"
+vpc_subnet_a_public: "{{ cf.stack_outputs.SubnetAPublic }}"
+vpc_subnet_b_private: "{{ cf.stack_outputs.SubnetBPrivate }}"
+vpc_subnet_b_public: "{{ cf.stack_outputs.SubnetBPublic }}"
+vpc_subnets_private: "{{ cf.stack_outputs.SubnetsPublic }}"
+vpc_template_id: "{{ cf.stack_outputs.vpc_template_id }}"
+vpc: "{{ cf.stack_outputs.VPC }}"
+vpc_stack_name: multi-az-vpc
+
+##
+# Security Group Info
+##
+
+vpc_sg_name: "simple-web-sg"

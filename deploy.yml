@@ -1,0 +1,59 @@
+---
+# deploy.yml
+#
+
+# This file is responsible for deploying our AWS nginx example Hello World project.
+# Check out README.md or the docs directory.
+
+
+# We start out locally, doing all our work using boto and awscli setting up our 
+# VPC stacks so we have an environment to launch our ec2 instance into
+- hosts: localhost
+  connection: local
+  gather_facts: yes
+  name: simple-web-server
+
+  roles:
+    - zoraah.aws-stack
+    - launch
+
+# Now onto the ec2 instance so we can configure it properly, running both the
+# ansible and security roles
+- hosts: simple-web-sg
+
+  become_user: root
+  become_method: sudo
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - geerlingguy.nginx
+    - geerlingguy.security
+
+# Finally let's perform some simple tests to make sure our page is accessible
+- hosts: localhost
+  gather_facts: yes
+  connection: local
+  tasks:
+
+    ##
+    # Test that HTTP requests are fulfilled successful by verifying the HTTP
+    # status code was 200 for a request to http://{ ec2instance.public_dns_name }
+    ##
+  - name: Testing that HTTP requests are successful
+    action: uri url=http://{{ ec2.instances[0].public_dns_name }} return_content=yes
+    register: webpage
+
+  - fail: msg='nginx is not returning HTTP status 200'
+    when: "webpage.status != 200"
+
+    ##
+    # Test that our page loads by making sure that 'Hello World' is returned in the
+    # page content.
+    ##
+  - name: Test that our Hello World web page displays
+    action: uri url=http://{{ ec2.instances[0].public_dns_name }} return_content=yes
+    register: webpage
+
+  - fail: msg='Hello World Page is not loading'
+    when: "'Hello Weorld' not in webpage.content"

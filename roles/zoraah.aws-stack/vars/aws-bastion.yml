@@ -1,0 +1,26 @@
+---
+
+##
+#  Variables file for AWS Bastion CloudFormation Stack
+##
+
+# CloudFormation name for bastion stack
+bastion_stack_name: simple-web-bastion
+
+# Instance type of the SSH bastion host/instance.
+bastion_instance_type: t2.nano
+
+# Optional key pair of the ec2-user to establish a SSH connection to the SSH
+# bastion host/instance.
+bastion_key_name: us-east
+
+# Synchronize public keys of IAM users to enable personalized SSH access
+# Doc: https://cloudonaut.io/manage-aws-ec2-ssh-access-with-iam/
+bastion_iam_ssh: "false"
+
+# Specifies the number of days you want to retain log events.
+bastion_log_retention: "14"
+
+# Optional New Relic License Key will install the New Relic Servers for Linux
+# agent
+bastion_nr_key: ""

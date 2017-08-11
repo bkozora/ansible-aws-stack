@@ -1,0 +1,4 @@
+---
+- name: Install fail2ban.
+  yum: name=fail2ban state=present enablerepo=epel
+  become: true

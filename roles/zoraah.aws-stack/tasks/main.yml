@@ -1,0 +1,72 @@
+---
+# tasks file for zoraah.aws-stack
+
+##
+# This is the main tasks file for the AWS stack creation. It's responsible for the 
+# creation of the VPC as well as coordinating the creation and configuration of other network
+# level AWS resources such as the NAT Gateway, bastion hosts, Security Groups, and IAM SSL Certificates
+##
+
+- name: Include all .yml files
+  include_vars:
+    dir: 'vars'
+    extensions: ['yml']
+    
+- name: launch multi AZ VPC with public and private subnets via cloudformation
+  cloudformation:
+    stack_name: "{{  vpc_stack_name  }}"
+    state: "present"
+    region: "{{ region }}"
+    disable_rollback: true
+    template: "roles/zoraah.aws-stack/files/vpc-pub-priv-sub-dual-AZ.template"
+    template_parameters:
+      ClassB: "0"
+    tags:
+      name: "multi-az-vpc"
+  register: cf
+
+# No need for a NAT gateway since moving the instance back into a public subnet
+# - name: Launch NAT Gateway in the VPC we just launched
+#   cloudformation:
+#     stack_name: NAT-gateway
+#     state: "present"
+#     region: "{{ region }}"
+#     disable_rollback: false
+#     template: "roles/zoraah.aws-stack/files/vpc-nat-gateway.template"
+#     template_parameters:
+#       ParentVPCStack: "multi-az-vpc"
+#     tags:
+#       name: "vpc-nat-gw"
+#   register: vpc_nat_gw
+
+
+##
+# Bastion Host
+##
+# - name: Include AWS Bastion specific files
+#   include: "aws-bastion.yml"
+#   static: no
+
+
+##
+# Elastic Load Balancer
+##
+# - name: Include AWS ELB specific files
+#   include: "aws-elb.yml"
+#   static: no
+
+
+##
+# Security Groups
+##
+- name: Include AWS SG specific files
+  include: aws-sg.yml
+  static: no
+
+
+##
+# Identity & Access Management SSL Certificate
+##
+# - name: Include AWS IAM SSL Certificate specific files
+#   include: aws-ssl.yml
+#   static: no
