@@ -1,6 +1,6 @@
 # DevOps Code Challenge - AWS VPC Stack Configured Using Ansible and CloudFormation 
 
-The following Ansible playbook will deploy a self contained environment to run a simple nginx web server running on AWS. A brief rundown of some of the nuts and bolts:
+The following Ansible playbook will deploy a self contained environment to run a simple nginx web server within a dual AZ VPC with 2 public and private subnets running on AWS. A brief rundown of some of the nuts and bolts:
 
 * Uniquely dynamic to deal with automated generation and configuration of entire environment, VPC and all interworking components
 * Based on a modified version of Ubuntu 17.04 Server that I installed Python 2.7 on (AMI made publicly available as ami-5d2e0e38)
