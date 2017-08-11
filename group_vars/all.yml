@@ -13,12 +13,15 @@ region: us-east-2
 ##
 
 ami_id: ami-5d2e0e38
+
 instance_type: t2.nano
 instance_name: simple-web-server
+
 volumes:
   - device_name: /dev/sda1
     device_type: gp2
-    volume_size: 5
+    volume_size: 20
     delete_on_termination: true
+
 keypair: us-east
 security_groups: ['simple-web-sg']
