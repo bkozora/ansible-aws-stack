@@ -1,0 +1,6 @@
+*.retry
+.idea/
+aws-web.iml
+*.sublime-project
+*.sublime-workspace
+*.DS_Store
